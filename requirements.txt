@@ -1,4 +1,6 @@
+alembic
 scrapy
 scrapy_proxies
 scrapy_sqlitem
 scrapy-random-useragent
+sqlalchemy

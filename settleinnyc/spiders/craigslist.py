@@ -1,38 +1,17 @@
 # -*- coding: utf-8 -*-
-import re
-import scrapy
 from datetime import datetime
+
+import scrapy
 from scrapy import Request
+from scrapy_sqlitem import SqlSpider
 
-KEYWORDS = [
-    'no voucher',
-    'no public assistance',
-    'no program',
-    'no public benefits'
-]
-
-KEYWORD_RES = map(lambda x: re.compile('\\b' + x + '\\b', re.I), KEYWORDS)
+from models import ListingItem
 
 
-def extract_keywords(text):
-    output = {}
-    for keyword, pattern in zip(KEYWORDS, KEYWORD_RES):
-        output[keyword] = bool(pattern.findall(text))
-    return output
-
-
-class Spider(scrapy.Spider):
+class Spider(SqlSpider):
     name = 'craigslist'
     allowed_domains = ['craigslist.org']
     start_urls = ['https://newyork.craigslist.org/search/aap']
-    custom_settings = {
-        'FEED_EXPORT_FIELDS': [
-            'url', 'price', 'date',
-            'no voucher',
-            'no public assistance',
-            'no public benefits',
-        ]
-    }
 
     def parse(self, response):
         # The proxy middleware suggests this
@@ -57,10 +36,10 @@ class Spider(scrapy.Spider):
         text = "".join(response
                        .xpath('//section[@id="postingbody"]/text()')
                        .extract())
-        data_row = {
-            'url': response.url,
-            'price': price,
-            'date': datetime.now().isoformat(),
-        }
-        data_row.update(extract_keywords(text))
-        yield data_row
+
+        item = ListingItem()
+        item['url'] =  response.url
+        item['price'] = float(price.replace('$', ''))
+        item['scraped_at'] = datetime.now()
+        item['text'] = text
+        yield item

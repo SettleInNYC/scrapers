@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import ConfigParser
 
 # Scrapy settings for settleinnyc project
 #
@@ -19,6 +20,10 @@ NEWSPIDER_MODULE = 'settleinnyc.spiders'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
+
+_config = ConfigParser.ConfigParser()
+_config.read('alembic.ini')
+DATABASE_URI = _config.get('alembic', 'sqlalchemy.url')
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
