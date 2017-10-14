@@ -3,4 +3,6 @@ scrapy
 scrapy_proxies
 scrapy_sqlitem
 scrapy-random-useragent
+scrapyd
+scrapyd-client
 sqlalchemy
