@@ -20,11 +20,11 @@ def upgrade():
     op.create_table(
         'listing',
         sa.Column('id', sa.Integer, primary_key=True),
-        sa.Column('url', sa.String(), nullable=False),
+        sa.Column('url', sa.Text, nullable=False),
+        sa.Column('scraped_at', sa.DateTime, nullable=False),
         sa.Column('zipcode', sa.String(5)),
-        sa.Column('text', sa.Unicode()),
+        sa.Column('text', sa.UnicodeText),
         sa.Column('price', sa.Float),
-        sa.Column('scraped_at', sa.DateTime)
     )
 
 
