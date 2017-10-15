@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapyd
 import pkg_resources
+import ConfigParser
 
 # Scrapy settings for settleinnyc project
 #
@@ -22,7 +23,10 @@ NEWSPIDER_MODULE = 'settleinnyc.spiders'
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
 
-DATABASE_URI = dict(scrapyd.Config().items('alembic'))['sqlalchemy.url']
+try:
+    DATABASE_URI = dict(scrapyd.Config().items('alembic')).get('sqlalchemy.url')
+except ConfigParser.NoSectionError:
+    DATABASE_URI = 'sqlite:///foo.db'
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
