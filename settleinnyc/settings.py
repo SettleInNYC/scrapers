@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-import ConfigParser
+import scrapyd
+import pkg_resources
 
 # Scrapy settings for settleinnyc project
 #
@@ -21,9 +22,7 @@ NEWSPIDER_MODULE = 'settleinnyc.spiders'
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
 
-_config = ConfigParser.ConfigParser()
-_config.read('alembic.ini')
-DATABASE_URI = _config.get('alembic', 'sqlalchemy.url')
+DATABASE_URI = dict(scrapyd.Config().items('alembic'))['sqlalchemy.url']
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -97,4 +96,5 @@ HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 HTTPCACHE_POLICY = 'scrapy.extensions.httpcache.RFC2616Policy'
 
 # Configuration for the random user agent middleware
-USER_AGENT_LIST = 'useragents.txt'
+USER_AGENT_LIST = pkg_resources.resource_filename(
+    'settleinnyc', 'useragents.txt')
